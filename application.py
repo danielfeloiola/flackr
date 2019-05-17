@@ -11,7 +11,7 @@ socketio = SocketIO(app)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-#Session(app)
+Session(app)
 users = {}
 channels = {}
 messages = []
@@ -35,5 +35,5 @@ def msg(data):
     #emit("messages", messages, broadcast=True)
     emit("messages", data, broadcast=True)
 
-if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+#if __name__ == '__main__':
+#    app.run(debug=True, host="0.0.0.0")
