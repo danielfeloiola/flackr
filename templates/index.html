@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <!-- Title -->
+        <title>Flackr</title>
+
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/fav.ico')}}">
+
+        <!-- Stylesheet -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css')}}">
+
+        <!-- JS -->
+        <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+
+        <!-- Bootstrap -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet" />
+
+        <!-- JS Libs -->
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+
+    </head>
+
+    <body>
+
+        <!-- -->
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">Home</a>
+          <a class="nav-link" id="v-pills-profile-tab" data-toggle="pill" href="#v-pills-profile" role="tab" aria-controls="v-pills-profile" aria-selected="false">Profile</a>
+          <a class="nav-link" id="v-pills-messages-tab" data-toggle="pill" href="#v-pills-messages" role="tab" aria-controls="v-pills-messages" aria-selected="false">Messages</a>
+          <a class="nav-link" id="v-pills-settings-tab" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">Settings</a>
+        </div>
+
+        <!-- -->
+
+
+        <div id="main">
+          <nav>
+            <h1 id="header">Messages<hr></h1>
+          </nav>
+
+          <ul id="tasks">
+          </ul>
+
+
+
+            <form id="form" class="form-inline">
+              <div id="msg-input" class="input-group">
+                <input id="message" autocomplete="off" autofocus placeholder="Message" type="text" class="form-control">
+                  <span class="input-group-btn">
+                    <button id="submit" type="submit" class="btn btn-primary">Send</button>
+                  </span>
+                </input>
+              </div>
+            </form>
+
+
+
+
+        </div>
+
+    </body>
+</html>
