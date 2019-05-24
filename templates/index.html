@@ -17,7 +17,7 @@
         <!-- Bootstrap -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" rel="stylesheet" />
 
-        <!-- JS Libs -->
+        <!-- More JS stuff -->
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
@@ -27,13 +27,13 @@
 
     <body>
 
-        <!-- TROCAR ISSO POR UMA LISTA E ADICIONAR OS CANAIS VIA JS -->
-        <!-- OS CANAIS PRECISAM SER SELECIONAVEIS E CARREGAR NOVAS MENSAGENS-->
+        <!-- OS CANAIS PRECISAM CARREGAR NOVAS MENSAGENS-->
         <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-        <ul id="channels">
+            <a class="btn" id="newchannel" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">New Channel</a>
 
-          <a class="nav-link" id="newchannel" data-toggle="pill" href="#v-pills-settings" role="tab" aria-controls="v-pills-settings" aria-selected="false">New Channel</a>
-        </ul>
+            <ul id="channels">
+            </ul>
+
         </div>
 
         <!-- -->

@@ -5,6 +5,10 @@
 
 }
 
+li {
+    list-style-type: none;
+}
+
 #main{
     position: absolute;
     left: 20%;
@@ -64,6 +68,23 @@
 
 #submit{
     margin-left: 0px;
+
+}
+
+#newchannel{
+    text-align: left;
+    outline:none;
+    border: 0px solid transparent;
+
+}
+
+#newchannel:focus {
+    box-shadow:none;
+
+}
+
+#newchannel:active {
+    box-shadow:none;
 
 }
 
