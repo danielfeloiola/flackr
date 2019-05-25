@@ -242,6 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Store the new channel as selected channel
         localStorage.setItem("channel", data.name);
 
+        //Change title
+        document.querySelector('#header').innerHTML = "#" + data.name + "<hr>";
+
         // Clear messages list
         document.querySelector('#msgs').innerHTML = "";
 
@@ -288,6 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Clear messages list
                 document.querySelector('#msgs').innerHTML = "";
+
+                //Change title
+                document.querySelector('#header').innerHTML = "#" + chanl + "<hr>";
 
                 // Ask for a new list of channels
                 socket.emit('get_channels');
