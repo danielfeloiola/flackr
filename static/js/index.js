@@ -3,7 +3,7 @@
 
  __________________
 |  ______________  |
-| |        __    | |  ______ _            _
+| |        __    | |   _____ _            _
 | |       / /    | |  |  ___| |          | |
 | |      / /     | |  | |_  | | __ _  ___| | ___ __
 | |     / /      | |  |  _| | |/ _` |/ __| |/ / '__|
@@ -55,21 +55,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     ///////////////////////////////////////////////////////////////////////////
-    // SET UP CHANNELS
+    // SET UP CHANNELS AND MESSAGES
     //////////////////////////////////////////////////////////////////////////
 
-    // Set the channel to general as standard
-    localStorage.setItem('channel', 'general');
+    // if no channel is selected
+    if (localStorage.getItem("username") == null) {
 
+        // set up channel
+        localStorage.setItem('channel', 'general');
+
+        // ASK FOR THE LIST WITH CHANNELS
+        socket.emit('get_channels');
+
+        // ASK FOR MESSAGES INSIDE THE CHANNEL
+        socket.emit('get_all_messages', {
+            'name': localStorage.getItem("channel"),
+        });
+
+    } else {
+
+        // ASK FOR THE LIST WITH CHANNELS
+        socket.emit('get_channels');
+
+        // ASK FOR MESSAGES INSIDE THE CHANNEL
+        socket.emit('get_all_messages', {
+            'channel': localStorage.getItem("channel"),
+        });
+
+
+    }
+
+/*
     // ASK FOR THE LIST WITH CHANNELS
     socket.emit('get_channels');
 
     // ASK FOR MESSAGES INSIDE THE CHANNEL
     // NOT READY YET.....
-    //socket.emit('get_messages', {
-        //'name': channelname,
-    //});
-
+    socket.emit('get_all_messages', {
+        'name': localStorage.getItem("channel"),
+    });
+*/
 
     ////////////////////////////////////////////////////////////////////////
     // SEND MESSAGES TO BACKEND AND FORM SUBMISSION CONTROL
@@ -96,14 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
         let time = new Date();
 
         // Log the data on the console
-        console.log(text);
-        console.log(time);
-        console.log(username);
+        //console.log(text);
+        //console.log(time);
+        //console.log(username);
+        //console.log(localStorage.getItem("channel"));
 
         // send message to server
         socket.emit('newmessage', {
             'user': localStorage.getItem('username'),
-            'time': time,
+            //'time': time,
             'message': text,
             'channel': localStorage.getItem('channel'),
             'time': time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
@@ -131,14 +157,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (channelname !== null){
 
             // Log the data on the console
-            console.log(channelname);
+            //console.log(channelname);
 
             // send message to server
-            socket.emit('newchannel', {
+            socket.emit('new_channel', {
                 'name': channelname,
 
             })
 
+        } else {
+            alert("Please provide a channel name!");
         }
 
     };
@@ -151,6 +179,33 @@ document.addEventListener('DOMContentLoaded', () => {
     //////////////////////////////////////////////////////////////////////////
     // WEB SOCKET ON DATA
     //////////////////////////////////////////////////////////////////////////
+
+    // Get all messages of a channel
+    socket.on('get_all_messages', data =>
+    {
+        // get channel
+        //var channel = localStorage.gatItem('channel');
+
+        for (let messages of data) {
+
+            //console.log(messages)
+
+            // Create new item for list
+            const li = document.createElement('li');
+
+            // Add the message/date/usernate to item
+            li.innerHTML = messages.user + ' - ' + messages.time + '<br>' + messages.message + '<br>' + '<hr>' ;
+
+            // Add new item to task list
+            document.querySelector('#msgs').append(li);
+
+        }
+
+        // scroll the page down
+        window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+
+
+    });
 
     // ON A NEW MESSAGE
     socket.on('message', data =>
@@ -184,6 +239,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Add new item to task list
         document.querySelector('#channels').append(li);
 
+        // Store the new channel as selected channel
+        localStorage.setItem("channel", data.name);
+
+        // Clear messages list
+        document.querySelector('#msgs').innerHTML = "";
+
+        // Ask for a new list of channels
+        socket.emit('get_channels');
+
+        // ask for new messages
+        socket.emit('get_all_messages', {
+            'channel': localStorage.getItem("channel"),
+        });
+
+
     });
 
 
@@ -199,11 +269,9 @@ document.addEventListener('DOMContentLoaded', () => {
             // Create new item for list
             const li = document.createElement('li');
 
-            // Add the message/date/usernate to item
+            // Add the message/date/username to item
             if (chanl == localStorage.getItem("channel")){
                 li.innerHTML = '<a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-selected="true">'+chanl+'</a>';
-                //console.log(chanl);
-                //console.log(localStorage.getItem("channel"));
             } else {
                 li.innerHTML = '<a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-selected="false">'+chanl+'</a>';
             }
@@ -212,14 +280,23 @@ document.addEventListener('DOMContentLoaded', () => {
             // Add new item to task list
             document.querySelector('#channels').append(li);
 
-            // MAKE A SELECTOR
+            // WHEN THE USER SELECTS A CHANNEL
             li.addEventListener("click", () => {
-                //socket.emit('get_channels');
-                localStorage.setItem("channel", chanl);
-                socket.emit('get_channels');
-                console.log('channel is: ', chanl)
 
-                //socket.emit("get_mesages", { chanl });
+                // Store the new channel selection
+                localStorage.setItem("channel", chanl);
+
+                // Clear messages list
+                document.querySelector('#msgs').innerHTML = "";
+
+                // Ask for a new list of channels
+                socket.emit('get_channels');
+
+                // ask for new messages
+                socket.emit('get_all_messages', {
+                    'channel': localStorage.getItem("channel"),
+                });
+
 
             });
 
