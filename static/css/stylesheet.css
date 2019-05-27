@@ -58,7 +58,23 @@ li {
 }
 
 #time{
+    color: grey;
     font-weight: lighter;
+}
+
+#deletebutton{
+    float: right;
+    background-color: transparent;
+    border: none;
+    color: lightgrey;
+    font-weight: lighter;
+    visibility: visible;
+
+}
+
+#deletebutton:hover{
+    visibility: visible;
+    color: black;
 }
 
 #msg-input{
@@ -67,6 +83,11 @@ li {
 }
 
 #submit{
+    margin-left: 0px;
+
+}
+
+#inputGroupFile03{
     margin-left: 0px;
 
 }

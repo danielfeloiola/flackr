@@ -15,7 +15,6 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 # Store channels and messages
 channels = {"general": collections.deque([], maxlen=100)}
 
-
 @app.route("/")
 def index():
     '''Shows the home page'''
@@ -52,7 +51,6 @@ def get_all_mesages(data):
 
     channel = data['channel']
     emit('get_all_messages', list(channels[channel]))
-
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

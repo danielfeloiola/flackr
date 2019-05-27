@@ -43,13 +43,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         var txt;
         var username = prompt("Please enter your name:");
+
         if (username == null || username == "") {
-            //txt = "Username not set.";
-        } else {
-            //txt = "Hello " + username + "! How are you today?";
+            alert("Please provide a username");
+        }
+        else
+        {
             localStorage.setItem('username', username);
         }
-        document.getElementById("demo").innerHTML = txt;
 
     }
 
@@ -59,7 +60,8 @@ document.addEventListener('DOMContentLoaded', () => {
     //////////////////////////////////////////////////////////////////////////
 
     // if no channel is selected
-    if (localStorage.getItem("username") == null) {
+    if (localStorage.getItem("channel") == null)
+    {
 
         // set up channel
         localStorage.setItem('channel', 'general');
@@ -70,9 +72,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // ASK FOR MESSAGES INSIDE THE CHANNEL
         socket.emit('get_all_messages', {
             'name': localStorage.getItem("channel"),
+
         });
 
-    } else {
+    }
+    else
+    {
 
         // ASK FOR THE LIST WITH CHANNELS
         socket.emit('get_channels');
@@ -85,16 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 
-/*
-    // ASK FOR THE LIST WITH CHANNELS
-    socket.emit('get_channels');
-
-    // ASK FOR MESSAGES INSIDE THE CHANNEL
-    // NOT READY YET.....
-    socket.emit('get_all_messages', {
-        'name': localStorage.getItem("channel"),
-    });
-*/
 
     ////////////////////////////////////////////////////////////////////////
     // SEND MESSAGES TO BACKEND AND FORM SUBMISSION CONTROL
@@ -107,9 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#message').onkeyup = () =>
     {
         if (document.querySelector('#message').value.length > 0)
+        {
             document.querySelector('#submit').disabled = false;
+        }
         else
+        {
             document.querySelector('#submit').disabled = true;
+        }
+
     };
 
     // THIS IS WHEN THE MESSAGE IS SUBMITTED
@@ -120,16 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let text = document.querySelector('#message').value;
         let time = new Date();
 
-        // Log the data on the console
-        //console.log(text);
-        //console.log(time);
-        //console.log(username);
-        //console.log(localStorage.getItem("channel"));
-
         // send message to server
         socket.emit('newmessage', {
             'user': localStorage.getItem('username'),
-            //'time': time,
             'message': text,
             'channel': localStorage.getItem('channel'),
             'time': time.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
@@ -154,10 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // promp fot new channel name
         var channelname = prompt("Add a new channel: ");
 
-        if (channelname !== null){
-
-            // Log the data on the console
-            //console.log(channelname);
+        if (channelname !== null)
+        {
 
             // send message to server
             socket.emit('new_channel', {
@@ -165,15 +156,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             })
 
-        } else {
+        }
+        else
+        {
             alert("Please provide a channel name!");
         }
 
     };
-
-
-
-
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -183,18 +172,50 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get all messages of a channel
     socket.on('get_all_messages', data =>
     {
-        // get channel
-        //var channel = localStorage.gatItem('channel');
 
-        for (let messages of data) {
-
-            //console.log(messages)
+        for (let messages of data)
+        {
 
             // Create new item for list
             const li = document.createElement('li');
 
             // Add the message/date/usernate to item
-            li.innerHTML = messages.user + ' - ' + messages.time + '<br>' + messages.message + '<br>' + '<hr>' ;
+            //li.innerHTML = messages.user + ' - ' + messages.time + '<br>' + messages.message + '<br>' + '<hr>' ;
+
+            let user = '<span id="username">' + messages.user + '</span>'
+            let time = '<span id="time">' + messages.time + '</span>'
+            let br = document.createElement('br');
+            let br2 = document.createElement('br');
+            let hr = document.createElement('hr');
+            let message = messages.message
+
+            if (localStorage.getItem('username') == messages.user){
+                /// then this message was sent by the user
+
+                // create delete button
+                let del = document.createElement('button');
+                del.innerHTML = "delete";
+                del.setAttribute("id", "deletebutton");
+                del.addEventListener("click", function(){
+                    alert("are you sure muggle?");
+                });
+
+                // add all to li
+                li.innerHTML = user + '  ' + time;
+                li.appendChild(del);
+                li.appendChild(br);
+                li.append(message);
+                li.appendChild(br2);
+                li.appendChild(hr);
+
+            }else{
+                // No delete button
+
+                // Add the message/date/usernate to item
+                li.innerHTML = user + '  ' + time + '<br>' + message + '<br>' + '<hr>';
+
+            }
+
 
             // Add new item to task list
             document.querySelector('#msgs').append(li);
@@ -210,23 +231,67 @@ document.addEventListener('DOMContentLoaded', () => {
     // ON A NEW MESSAGE
     socket.on('message', data =>
     {
+        //console.log(data);
 
-        // Create new item for list
-        const li = document.createElement('li');
+        if (data.channel == localStorage.getItem('channel')){
 
-        // Add the message/date/usernate to item
-        li.innerHTML = data.user + ' - ' + data.time + '<br>' + data.message + '<br>' + '<hr>' ;
+            // Create new item for list
+            const li = document.createElement('li');
 
-        // Add new item to task list
-        document.querySelector('#msgs').append(li);
+            let user = '<span id="username">' + data.user + '</span>'
+            let time = '<span id="time">' + data.time + '</span>'
+            let br = document.createElement('br');
+            let br2 = document.createElement('br');
+            let hr = document.createElement('hr');
+            let message = data.message
 
-        // scroll the page down
-        window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+            //checking
+            if (localStorage.getItem('username') == data.user){
+                // if message was sent by the user
+
+                // create delete button
+                let del = document.createElement('button');
+                del.innerHTML = "delete";
+                del.setAttribute("id", "deletebutton");
+                del.addEventListener("click", function(){
+                    alert("are you sure muggle?");
+                });
+
+                // add all to li
+                li.innerHTML = user + '  ' + time;
+                li.appendChild(del);
+                li.appendChild(br);
+                li.append(message);
+                li.appendChild(br2);
+                li.appendChild(hr);
+
+
+
+            }else{
+                // No delete button
+
+                // Add the message/date/usernate to item
+                li.innerHTML = user + '  ' + time + '<br>' + message + '<br>' + '<hr>';
+
+            }
+
+
+            // Add the message/date/usernate to item
+            //li.innerHTML = data.user + ' - ' + data.time + '<br>' + data.message + '<br>' + '<hr>';
+
+            // Add new item to task list
+            document.querySelector('#msgs').append(li);
+
+            // scroll the page down
+            window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
+
+
+        }
 
 
     });
 
-    // ON A NEW CHANNEL
+    // IF A NEW CHANNEL IS CREATED
     socket.on('channel', data =>
     {
 
@@ -234,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const li = document.createElement('li');
 
         // Add the message/date/usernate to item
-        li.innerHTML = '<a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-selected="false">'+data.name+'</a>';
+        li.innerHTML = '<a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-selected="false">#'+data.name+'</a>';
 
         // Add new item to task list
         document.querySelector('#channels').append(li);
@@ -254,8 +319,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // ask for new messages
         socket.emit('get_all_messages', {
             'channel': localStorage.getItem("channel"),
-        });
 
+        });
 
     });
 
@@ -267,16 +332,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#channels').innerHTML = "";
 
         // Make a new list item for each channel
-        for (let chanl of data) {
+        for (let chanl of data)
+        {
 
             // Create new item for list
             const li = document.createElement('li');
 
             // Add the message/date/username to item
-            if (chanl == localStorage.getItem("channel")){
-                li.innerHTML = '<a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-selected="true">'+chanl+'</a>';
-            } else {
-                li.innerHTML = '<a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-selected="false">'+chanl+'</a>';
+            if (chanl == localStorage.getItem("channel"))
+            {
+                li.innerHTML = '<a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-selected="true">#'+chanl+'</a>';
+            }
+            else
+            {
+                li.innerHTML = '<a class="nav-link" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-selected="false">#'+chanl+'</a>';
             }
 
 
@@ -284,7 +353,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelector('#channels').append(li);
 
             // WHEN THE USER SELECTS A CHANNEL
-            li.addEventListener("click", () => {
+            li.addEventListener("click", () =>
+            {
 
                 // Store the new channel selection
                 localStorage.setItem("channel", chanl);
@@ -301,8 +371,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // ask for new messages
                 socket.emit('get_all_messages', {
                     'channel': localStorage.getItem("channel"),
-                });
 
+                });
 
             });
 
