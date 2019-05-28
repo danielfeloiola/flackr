@@ -87,7 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
             'channel': localStorage.getItem("channel"),
         });
 
-
     }
 
 
@@ -177,12 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             if (messages.user != null){
 
-
                 // Create new item for list
                 const li = document.createElement('li');
-
-                // Add the message/date/usernate to item
-                //li.innerHTML = messages.user + ' - ' + messages.time + '<br>' + messages.message + '<br>' + '<hr>' ;
 
                 let user = '<span id="username">' + messages.user + '</span>'
                 let time = '<span id="time">' + messages.time + '</span>'
@@ -199,8 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     del.innerHTML = "delete";
                     del.setAttribute("id", "deletebutton");
                     del.addEventListener("click", function(){
+
                         var confirmation = confirm("are you sure muggle?");
                         if (confirmation == true){
+                            
                             li.innerHTML = '';
 
                             // send message to server
@@ -210,7 +207,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                 'channel': localStorage.getItem('channel'),
                                 'time': messages.time,
                             });
+
                         }
+
                     });
 
                     // add all to li
@@ -223,20 +222,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 }else{
                     // No delete button
-
                     // Add the message/date/usernate to item
                     li.innerHTML = user + '   ' + time + '<br>' + message + '<br>' + '<hr>';
 
                 }
 
-
                 // Add new item to task list
                 document.querySelector('#msgs').append(li);
 
-
-
             }
-
 
         }
 
@@ -283,6 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             'channel': localStorage.getItem('channel'),
                             'time': data.time,
                         });
+
                     }
 
                 });
@@ -295,19 +290,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 li.appendChild(br2);
                 li.appendChild(hr);
 
-
-
             }else{
                 // No delete button
-
                 // Add the message/date/usernate to item
                 li.innerHTML = user + '   ' + time + '<br>' + message + '<br>' + '<hr>';
 
             }
-
-
-            // Add the message/date/usernate to item
-            //li.innerHTML = data.user + ' - ' + data.time + '<br>' + data.message + '<br>' + '<hr>';
 
             // Add new item to task list
             document.querySelector('#msgs').append(li);
@@ -315,9 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // scroll the page down
             window.scrollTo(0, document.body.scrollHeight || document.documentElement.scrollHeight);
 
-
         }
-
 
     });
 
@@ -413,28 +399,6 @@ document.addEventListener('DOMContentLoaded', () => {
     socket.on('delete_message', data =>
     {
 
-        // Create new item for list
-        //const li = document.createElement('li');
-
-        // Add the message/date/usernate to item
-        //li.innerHTML = '';
-
-        // Add new item to task list
-        //document.querySelector('#channels').append(li);
-
-        // Store the new channel as selected channel
-        //localStorage.setItem("channel", data.name);
-
-        //Change title
-        //document.querySelector('#header').innerHTML = "#" + data.name + "<hr>";
-
-        // Clear messages list
-        //document.querySelector('#msgs').innerHTML = "";
-
-        // Ask for a new list of channels
-        //socket.emit('get_channels');
-        //console.log(data);
-
         if (localStorage.getItem("channel") == data.channel){
             // clear the message list
             document.querySelector('#msgs').innerHTML = "";
@@ -444,8 +408,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 'channel': localStorage.getItem("channel"),
 
             });
-        }
 
+        }
 
     });
 
