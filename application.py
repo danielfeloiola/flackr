@@ -18,7 +18,6 @@ channels = {"general": collections.deque([], maxlen=100)}
 @app.route("/")
 def index():
     '''Shows the home page'''
-
     return render_template("index.html")
 
 @socketio.on("newmessage")
@@ -51,6 +50,25 @@ def get_all_mesages(data):
 
     channel = data['channel']
     emit('get_all_messages', list(channels[channel]))
+
+@socketio.on('delete_message')
+def delete_message(data):
+    '''Delete a message'''
+
+    channel = data['channel']
+    iterator = 0
+    # for each entry in dict
+    for values in channels[channel]:
+        if values != {}:
+            # find the message
+            if values['user'] == data['user']:
+                if values['message'] == data['message']:
+                    if values['time'] == data['time']:
+                        #delete it
+                        channels[channel][iterator] = {}
+        iterator += 1
+    emit('delete_message', data)
+
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

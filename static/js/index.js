@@ -175,50 +175,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let messages of data)
         {
+            if (messages.user != null){
 
-            // Create new item for list
-            const li = document.createElement('li');
 
-            // Add the message/date/usernate to item
-            //li.innerHTML = messages.user + ' - ' + messages.time + '<br>' + messages.message + '<br>' + '<hr>' ;
-
-            let user = '<span id="username">' + messages.user + '</span>'
-            let time = '<span id="time">' + messages.time + '</span>'
-            let br = document.createElement('br');
-            let br2 = document.createElement('br');
-            let hr = document.createElement('hr');
-            let message = messages.message
-
-            if (localStorage.getItem('username') == messages.user){
-                /// then this message was sent by the user
-
-                // create delete button
-                let del = document.createElement('button');
-                del.innerHTML = "delete";
-                del.setAttribute("id", "deletebutton");
-                del.addEventListener("click", function(){
-                    alert("are you sure muggle?");
-                });
-
-                // add all to li
-                li.innerHTML = user + '  ' + time;
-                li.appendChild(del);
-                li.appendChild(br);
-                li.append(message);
-                li.appendChild(br2);
-                li.appendChild(hr);
-
-            }else{
-                // No delete button
+                // Create new item for list
+                const li = document.createElement('li');
 
                 // Add the message/date/usernate to item
-                li.innerHTML = user + '  ' + time + '<br>' + message + '<br>' + '<hr>';
+                //li.innerHTML = messages.user + ' - ' + messages.time + '<br>' + messages.message + '<br>' + '<hr>' ;
+
+                let user = '<span id="username">' + messages.user + '</span>'
+                let time = '<span id="time">' + messages.time + '</span>'
+                let br = document.createElement('br');
+                let br2 = document.createElement('br');
+                let hr = document.createElement('hr');
+                let message = messages.message
+
+                if (localStorage.getItem('username') == messages.user){
+                    /// then this message was sent by the user
+
+                    // create delete button
+                    let del = document.createElement('button');
+                    del.innerHTML = "delete";
+                    del.setAttribute("id", "deletebutton");
+                    del.addEventListener("click", function(){
+                        var confirmation = confirm("are you sure muggle?");
+                        if (confirmation == true){
+                            li.innerHTML = '';
+
+                            // send message to server
+                            socket.emit('delete_message', {
+                                'user': messages.user,
+                                'message': message,
+                                'channel': localStorage.getItem('channel'),
+                                'time': messages.time,
+                            });
+                        }
+                    });
+
+                    // add all to li
+                    li.innerHTML = user + '   ' + time;
+                    li.appendChild(del);
+                    li.appendChild(br);
+                    li.append(message);
+                    li.appendChild(br2);
+                    li.appendChild(hr);
+
+                }else{
+                    // No delete button
+
+                    // Add the message/date/usernate to item
+                    li.innerHTML = user + '   ' + time + '<br>' + message + '<br>' + '<hr>';
+
+                }
+
+
+                // Add new item to task list
+                document.querySelector('#msgs').append(li);
+
+
 
             }
 
-
-            // Add new item to task list
-            document.querySelector('#msgs').append(li);
 
         }
 
@@ -254,11 +272,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 del.innerHTML = "delete";
                 del.setAttribute("id", "deletebutton");
                 del.addEventListener("click", function(){
-                    alert("are you sure muggle?");
+                    var confirmation = confirm("are you sure muggle?");
+                    if (confirmation == true){
+                        li.innerHTML = '';
+
+                        // send message to server
+                        socket.emit('delete_message', {
+                            'user': data.user,
+                            'message': message,
+                            'channel': localStorage.getItem('channel'),
+                            'time': data.time,
+                        });
+                    }
+
                 });
 
                 // add all to li
-                li.innerHTML = user + '  ' + time;
+                li.innerHTML = user + '   ' + time;
                 li.appendChild(del);
                 li.appendChild(br);
                 li.append(message);
@@ -271,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // No delete button
 
                 // Add the message/date/usernate to item
-                li.innerHTML = user + '  ' + time + '<br>' + message + '<br>' + '<hr>';
+                li.innerHTML = user + '   ' + time + '<br>' + message + '<br>' + '<hr>';
 
             }
 
@@ -377,6 +407,45 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
         }
+
+    });
+
+    socket.on('delete_message', data =>
+    {
+
+        // Create new item for list
+        //const li = document.createElement('li');
+
+        // Add the message/date/usernate to item
+        //li.innerHTML = '';
+
+        // Add new item to task list
+        //document.querySelector('#channels').append(li);
+
+        // Store the new channel as selected channel
+        //localStorage.setItem("channel", data.name);
+
+        //Change title
+        //document.querySelector('#header').innerHTML = "#" + data.name + "<hr>";
+
+        // Clear messages list
+        //document.querySelector('#msgs').innerHTML = "";
+
+        // Ask for a new list of channels
+        //socket.emit('get_channels');
+        //console.log(data);
+
+        if (localStorage.getItem("channel") == data.channel){
+            // clear the message list
+            document.querySelector('#msgs').innerHTML = "";
+
+            // ask messages (again)
+            socket.emit('get_all_messages', {
+                'channel': localStorage.getItem("channel"),
+
+            });
+        }
+
 
     });
 
