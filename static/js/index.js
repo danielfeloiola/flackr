@@ -195,9 +195,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     del.setAttribute("id", "deletebutton");
                     del.addEventListener("click", function(){
 
-                        var confirmation = confirm("are you sure muggle?");
+                        var confirmation = confirm("Are you sure?");
                         if (confirmation == true){
-                            
+
                             li.innerHTML = '';
 
                             // send message to server
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 del.innerHTML = "delete";
                 del.setAttribute("id", "deletebutton");
                 del.addEventListener("click", function(){
-                    var confirmation = confirm("are you sure muggle?");
+                    var confirmation = confirm("Are you sure?");
                     if (confirmation == true){
                         li.innerHTML = '';
 

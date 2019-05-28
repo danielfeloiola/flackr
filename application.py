@@ -57,6 +57,7 @@ def delete_message(data):
 
     channel = data['channel']
     iterator = 0
+
     # for each entry in dict
     for values in channels[channel]:
         if values != {}:
@@ -72,4 +73,3 @@ def delete_message(data):
 
 if __name__ == '__main__':
     socketio.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
-    #app.run()
