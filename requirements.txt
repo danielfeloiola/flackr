@@ -18,6 +18,7 @@ python-engineio==3.13.2
 python-socketio==3.1.2
 requests==2.28.1
 six==1.16.0
+tornado==6.2
 urllib3==1.26.12
 Werkzeug==2.0.1
 zipp==3.8.1
