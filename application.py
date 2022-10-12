@@ -1,6 +1,7 @@
 import os
 import requests
 import collections
+#collections.MutableSequence = collections.abc.MutableSequence
 
 from flask import Flask, jsonify, render_template, request
 from flask_socketio import SocketIO, emit
@@ -72,4 +73,4 @@ def delete_message(data):
 
 
 if __name__ == '__main__':
-    socketio.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    socketio.run(app, host="0.0.0.0", port=os.getenv("PORT", default=5000))
