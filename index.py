@@ -1,7 +1,6 @@
 import os
 import requests
 import collections
-#collections.MutableSequence = collections.abc.MutableSequence
 
 from flask import Flask, jsonify, render_template, request
 from flask_socketio import SocketIO, emit
